@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matter Js With SVG</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .matter-container{
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .other-section{
+            height: 200vh;
+            background-color: whitesmoke;
+        }
+        .matter-path{
+            fill: red;
+        }
+    </style>
+</head>
+<body>
+    <svg class="matter-svg" width="361" height="88" viewBox="0 0 361 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/pill-1-image.svg" d="M44 0H317C341.301 0 361 19.6995 361 44C361 68.3005 341.301 88 317 88H44C19.6995 88 0 68.3005 0 44C0 19.6995 19.6995 0 44 0Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="327" height="89" viewBox="0 0 327 89" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/pill-2-image.svg" d="M44.5 0H282.5C307.077 0 327 19.9233 327 44.5C327 69.0767 307.077 89 282.5 89H44.5C19.9233 89 0 69.0767 0 44.5C0 19.9233 19.9233 0 44.5 0Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="344" height="93" viewBox="0 0 344 93" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/pill-3-image.svg" d="M46.5 0H297.5C323.181 0 344 20.8188 344 46.5C344 72.1812 323.181 93 297.5 93H46.5C20.8188 93 0 72.1812 0 46.5C0 20.8188 20.8188 0 46.5 0Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="323" height="94" viewBox="0 0 323 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/pill-4-image.svg" d="M47 0H276C301.957 0 323 21.0426 323 47C323 72.9574 301.957 94 276 94H47C21.0426 94 0 72.9574 0 47C0 21.0426 21.0426 0 47 0Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="348" height="89" viewBox="0 0 348 89" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/pill-5-image.svg" d="M44.5 0H303.5C328.077 0 348 19.9233 348 44.5C348 69.0767 328.077 89 303.5 89H44.5C19.9233 89 0 69.0767 0 44.5C0 19.9233 19.9233 0 44.5 0Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/circle-1-image.svg" d="M128 256C57.3076 256 0 198.692 0 128C0 57.3076 57.3076 0 128 0C198.692 0 256 57.3076 256 128C256 198.692 198.692 256 128 256Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="248" height="248" viewBox="0 0 248 248" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/circle-2-image.svg" d="M124 248C55.5167 248 0 192.483 0 124C0 55.5167 55.5167 0 124 0C192.483 0 248 55.5167 248 124C248 192.483 192.483 248 124 248Z" fill="none"/>
+    </svg>
+    <svg class="matter-svg" width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="matter-path" data-sprite="./images/circle-3-image.svg" d="M128 256C57.3076 256 0 198.692 0 128C0 57.3076 57.3076 0 128 0C198.692 0 256 57.3076 256 128C256 198.692 198.692 256 128 256Z" fill="none"/>
+    </svg>
+
+    <div class="other-section">
+        <h1>Test</h1>
+    </div>
+    <div id="matter-container" class="matter-container"></div>
+    <div class="other-section"></div>
+
+
+<!-- matterjs-->
+<!-- https://matter-js-svg-bodies.webflow.io/ -->
+<!-- https://www.ttagz.co.uk/ -->
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/poly-decomp@0.3.0/build/decomp.min.js" ></script>
+    <script>
+        const SVG_PATH_SELECTOR = ".matter-path";
+        const baseWidth = 1500;
+    
+        const matterContainer = document.querySelector('#matter-container');
+        let matterContainerWidth = matterContainer.clientWidth;
+        let matterContainerHeight = matterContainer.clientHeight;
+        const boundariesThiccness = 60;
+    
+        // module aliases
+        let Engine = Matter.Engine,
+            Render = Matter.Render,
+            Runner = Matter.Runner,
+            Bodies = Matter.Bodies,
+            Composite = Matter.Composite;
+            MouseConstraint = Matter.MouseConstraint,
+            Mouse = Matter.Mouse,
+            Events = Matter.Events,
+            Body = Matter.Body
+            Svg = Matter.Svg,
+            Vector = Matter.Vector,
+            Vertices = Matter.Vertices;
+    
+        // create an engine
+        let engine = Engine.create();
+    
+        // create a renderer
+        let render = Render.create({
+            element: matterContainer,
+            engine: engine,
+            options: {
+                width: matterContainerWidth,
+                height: matterContainerHeight,
+                background: 'transparent',
+                pixelRatio: (/Mobi|Android|iPhone/i.test(navigator.userAgent)) ? 2 : 1,
+                wireframes: false,
+                showAngleIndicator: false,
+            },
+        });
+
+        document.querySelector('h1').innerText = (/Mobi|Android|iPhone/i.test(navigator.userAgent)) ? 2 : 1
+    
+        // create boxes and circles
+        // let boxA = Bodies.rectangle(400, 200, 80, 80);
+        // let boxB = Bodies.rectangle(450, 50, 80, 80);
+        // Composite.add(engine.world, [boxA, boxB]);
+        // for (let i = 0; i < 10 ; i++){
+        //     let circle = Bodies.circle(i, 10, 30, {
+        //         friction: 0.3,
+        //         frictionAir: 0.00001,
+        //         restitution: 0.8,
+        //     });
+        //     Composite.add(engine.world, circle);
+        // }
+    
+        // create Matter boundaries like: ground, ceil, left, right
+        let ceiling = Bodies.rectangle(
+            (matterContainerWidth / 2),
+            (0 - (boundariesThiccness / 2)),
+            (matterContainerWidth * 100),
+            boundariesThiccness,
+            {
+                isStatic: true,
+                render: {opacity: 0}
+            }
+        );
+        let ground = Bodies.rectangle(
+            (matterContainerWidth / 2),
+            (matterContainerHeight + (boundariesThiccness / 2)),
+            (matterContainerWidth * 100),
+            boundariesThiccness,
+            {
+                isStatic: true,
+                render: {opacity: 0}
+            }
+        );
+        let leftWall = Bodies.rectangle(
+            (0 - (boundariesThiccness / 2)),
+            (matterContainerHeight / 2),
+            boundariesThiccness,
+            (matterContainerHeight * 5),
+            {
+                isStatic: true,
+                render: {opacity: 0}
+            }
+        );
+        let rightWall = Bodies.rectangle(
+            (matterContainerWidth + (boundariesThiccness / 2)),
+            (matterContainerHeight / 2),
+            boundariesThiccness,
+            (matterContainerHeight * 5),
+            {
+                isStatic: true,
+                render: {opacity: 0}
+            }
+        );
+        // add all of the boundaries to the world
+        Composite.add(engine.world, [ceiling, ground, leftWall, rightWall]);
+    
+        // add mouse control
+        let mouse = Mouse.create(render.canvas);
+        let mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false,
+                }
+            },
+        });
+        Composite.add(engine.world, mouseConstraint);
+    
+        // keep the mouse in sync with rendering
+        render.mouse = mouse;
+    
+        // Allow scrolling when mouse or touch is on matter container
+        function allowScrollRemoveEventListener(eventName, eventObject){
+            mouseConstraint.mouse.element.removeEventListener(
+                eventName,
+                eventObject
+            );
+        }
+        // Allow scrolling when mouse is on matter container
+        allowScrollRemoveEventListener('mousewheel', mouseConstraint.mouse.mousewheel);
+        allowScrollRemoveEventListener('DOMMouseScroll', mouseConstraint.mouse.mousewheel);
+        // Allow swiping on touch-screen when in touch with the matter container
+        allowScrollRemoveEventListener('touchstart', mouseConstraint.mouse.mousedown);
+        allowScrollRemoveEventListener('touchmove', mouseConstraint.mouse.mousemove);
+        allowScrollRemoveEventListener('touchend', mouseConstraint.mouse.mouseup);
+    
+        mouseConstraint.mouse.element.addEventListener('touchstart', mouseConstraint.mouse.mousedown, { passive: true });
+        mouseConstraint.mouse.element.addEventListener('touchmove', (e) => {
+            if (mouseConstraint.body) {
+                mouseConstraint.mouse.mousemove(e);
+            }
+        });
+        mouseConstraint.mouse.element.addEventListener('touchend', (e) => {
+            if (mouseConstraint.body) {
+                mouseConstraint.mouse.mouseup(e);
+            }
+        });
+
+    
+        function createSvgBodies() {
+            const paths = document.querySelectorAll(SVG_PATH_SELECTOR);
+            const numRows = 2; // Number of rows
+            const numCols = 3; // Number of columns
+            
+            paths.forEach((path, index) => {
+                
+                let spacingX = path.closest('.matter-svg').clientWidth * 0.5; // Horizontal spacing between SVG bodies
+                let spacingY = path.closest('.matter-svg').clientWidth * 0.2; // Vertical spacing between rows
+                let imageUrl = path.dataset.sprite;
+                let vertices = Svg.pathToVertices(path);
+    
+                let row = Math.floor(index / numCols);
+                let col = index % numCols;
+    
+                let x = col * spacingX + 100;
+                let y = row * spacingY + 100;
+
+                const regularScaleFactor = (path.closest('.matter-svg').clientWidth / baseWidth);
+                let scaleFactor = (matterContainer.clientWidth * regularScaleFactor) / path.closest('.matter-svg').clientWidth;
+
+                if(scaleFactor > 1){
+                    scaleFactor = 1;
+                }
+                else if(scaleFactor < 0.5){
+                    scaleFactor = 0.5;
+                }
+                else{
+                    scaleFactor = scaleFactor;
+                }
+                
+                
+                vertices = Vertices.scale(vertices, scaleFactor, scaleFactor);
+                let svgBody = Bodies.fromVertices(
+                x,
+                y,
+                [vertices],
+                {
+                    friction: 0.1,
+                    frictionAir: 0.00001,
+                    restitution: 0.8,
+                    render: {
+                        index: index,
+                        sprite: {
+                            texture: imageUrl,
+                            xScale: scaleFactor,
+                            yScale: scaleFactor,
+                        },
+                        // fillStyle: "#464655",
+                        // strokeStyle: "#464655",
+                        lineWidth: 1,
+                    }
+                }
+                );
+    
+                Composite.add(engine.world, svgBody);
+            });
+        };
+
+        function scaleBodies() {
+            const allBodies = Composite.allBodies(engine.world);
+
+            allBodies.forEach((body) => {
+                if (body.isStatic === true) return; // don't scale walls and ground
+                
+                const { min, max } = body.bounds;
+                const bodyWidth = max.x - min.x;
+                
+                const regularScaleFactor = (Array.from(document.querySelectorAll('.matter-svg'))[body.render.index].clientWidth / baseWidth);
+                const scaleFactor = (matterContainer.clientWidth * regularScaleFactor) / Array.from(document.querySelectorAll('.matter-svg'))[body.render.index].clientWidth;
+
+                body.render.sprite.xScale = scaleFactor;
+                body.render.sprite.yScale = scaleFactor;
+                Body.scale(body, scaleFactor, scaleFactor);
+            });
+        }
+        
+        function handleResize(matterContainer){
+            matterContainerWidth = matterContainer.clientWidth;
+            matterContainerHeight = matterContainer.clientHeight;
+    
+            render.bounds.max.x = matterContainerWidth;
+            render.bounds.max.y = matterContainerHeight;
+            render.options.width = matterContainerWidth;
+            render.options.height = matterContainerHeight;
+            render.canvas.width = matterContainerWidth;
+            render.canvas.height = matterContainerHeight;
+            Render.setPixelRatio(render, window.devicePixelRatio); 
+    
+            //reposition function
+            function bodySetPosition(selector, ...parameters){
+                Body.setPosition(
+                    selector,
+                    Matter.Vector.create(
+                        ...parameters
+                    )
+                )
+            };
+            //reposition ground
+            bodySetPosition(
+                ground,
+                (matterContainerWidth / 2),
+                (matterContainerHeight + (boundariesThiccness / 2)),
+            );
+            //reposition rightWall
+            bodySetPosition(
+                rightWall,
+                (matterContainerWidth + (boundariesThiccness / 2)),
+                (matterContainerHeight / 2),
+            );
+
+            // scaleBodies()
+        }
+    
+    
+        // run handleResize on page resize
+        window.addEventListener('resize', ()=> handleResize(matterContainer));
+
+        // create runner
+        var runner = Runner.create();
+    
+        // // Flag to check if the engine has started
+        let engineStarted = false;
+        // Intersection Observer to start the engine only once
+        let observer = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting && !engineStarted) {
+                    // Element is in viewport and engine has not started yet
+                    engineStarted = true;
+                    createSvgBodies();
+                    // run the renderer
+                    Render.run(render);
+                    // run the engine
+                    Runner.run(runner, engine);
+                    observer.disconnect();
+                }
+            });
+        }, {
+            threshold: 0.1 // Adjust the threshold as needed
+        });
+        // Start observing the matterContainer
+        observer.observe(matterContainer);
+    
+    </script>
+</body>
+</html>
